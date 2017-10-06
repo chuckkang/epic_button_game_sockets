@@ -10,19 +10,23 @@
 			// this triggers the connection event in our server!
 			var socket = io.connect();
 			// we'll write all the socket stuff after the above line!
+			let count = 0;
 			 $('#epic_button').click(function () {
-					socket.emit("count", { 
-						reset: false
-					});
+					socket.emit("count", {});
+					count++;
+					$('#lbltest').html(count)
 				});
+			
 			$('#epic_reset').click(function () {
-					socket.emit("count", {
-						reset: true
-					});
+					socket.emit("reset", {});
+
 				});
-				socket.on('counter', function (data) {
+			
+			socket.on('counter', function (data) {
+				console.log("TEst on teh client")
 					$("#counter").html(data.counter);
-				});
+					
+				});	
 		});
 	</script>
 </head>
@@ -36,6 +40,7 @@
 				 
 				<button id="epic_button">Push the EPIC button</button>
 			<button id="epic_reset">reset</button>
+			<label id="lbltest"></label>
 		<div id="return_socket">
 
 		</div>

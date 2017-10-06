@@ -24,29 +24,36 @@ app.post('/', function (req, res) {
 var server = app.listen(8000, function(){
 	console.log("listening on port 8000.")
 })
+
 var io = require('socket.io').listen(server);
+
 var count = 0;	
 io.sockets.on('connection', function (socket) {
-/////////////////
-console.log("Client/socket is connected!");
-console.log("Client/socket id is: ", socket.id);
-// all the server socket code goes in here
-	
-socket.on("count", function (data) {
 	/////////////////
-	if (data.reset===true)
-		{count=0;}
-	else{ count++; }
+	console.log("Client/socket is connected!");
+	console.log("Client/socket id is: ", socket.id);
+	socket.on("count", function (data) {
+		console.log("testign**************888")
+		/////////////////
+		count++;
+		socket.emit('counter', {
+			counter: count
+		});
+		socket.broadcast.emit('counter', {
+			counter: count
+		});
+	})
+
+	socket.on("reset", function (data) {
+		count=0;
+		socket.emit('counter', {
+			counter: count
+		});
+		socket.broadcast.emit('counter', {
+			counter: count
+		});
+		})
+
 	
-	console.log(count, "----This is the counter")
-	socket.emit('counter', {
-		counter: count
-	});
-	// broadcast to everyoe
-	socket.broadcast.emit('counter', {
-		counter: count
-	});
-	/////////////////
-})
 /////////////////
 })
